@@ -1,6 +1,6 @@
 # 💼 Elijah Gutman - Business Analyst | Full-Stack Developer 🚀
 
-Hi there! 👋 Welcome to my GitHub profile. I am a passionate **Business Analyst** transitioning into the world of **software development**, with a mission to bridge the gap between business strategy and cutting-edge technology. My unique career journey blends **mechanical engineering**, entrepreneurial ventures, and impactful roles in business analysis, culminating in a skill set that’s both versatile and driven.
+Hi there! 👋 Welcome to my GitHub profile. I am a passionate **Business Analyst** with expertise as a **software development**, I have a mission to bridge the gap between business strategy and cutting-edge technology. My unique career journey blends **mechanical engineering**, entrepreneurial ventures, and impactful roles in business analysis, culminating in a skill set that’s both versatile and driven.
 
 ---
 
@@ -22,8 +22,9 @@ This curriculum empowered me to build scalable applications while understanding 
 
 ## 📈 My Story: From Mechanical Engineer to Business Analyst and Developer
 
-I started my career as a **Mechanical Engineer**, focusing on optimizing operations and managing multi-million-dollar equipment installations.
-However, my entrepreneurial journey as a **Co-Owner of W.i.P Boutique** ignited my passion for **business analysis** and **IT solutions**. 
+I began my career as a political advocate in the non-profit sector, driven by a desire to make a meaningful impact. However, after deep reflection and soul-searching, I realized I wanted to contribute more tangibly to the world rather than relying on political solutions to address its challenges.
+
+This realization led me to transition into a role as a Mechanical Engineer, where I focused on optimizing operations and managing multi-million-dollar equipment installations. While this role honed my technical expertise, it was my entrepreneurial journey as a Co-Owner of W.i.P Boutique that truly ignited my passion for business analysis and IT solutions, blending creativity with analytical problem-solving.
 
 In my role at **3M**, I led innovative projects that saved millions through asset tracking systems and user experience improvements, 
 while collaborating across teams to bridge technical and business perspectives. My latest experience as 
