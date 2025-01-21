@@ -1,6 +1,6 @@
 # 💼 Elijah Gutman - Business Analyst | Full-Stack Developer 🚀
 
-Hi there! 👋 Welcome to my GitHub profile. I am a passionate **Business Analyst** with expertise as a **software development**, I have a mission to bridge the gap between business strategy and cutting-edge technology. My unique career journey blends **mechanical engineering**, entrepreneurial ventures, and impactful roles in business analysis, culminating in a skill set that’s both versatile and driven.
+Hi there! 👋 Welcome to my GitHub profile. I am a passionate **Business Analyst** with expertise as a **software developer**, I have a mission to bridge the gap between business strategy and cutting-edge technology. My unique career journey blends **mechanical engineering**, entrepreneurial ventures, and impactful roles in business analysis, culminating in a skill set that’s both versatile and driven.
 
 ---
 
