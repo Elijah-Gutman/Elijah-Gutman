@@ -1,4 +1,4 @@
-# CloseDeals: six issues found 2026-08-21
+# CloseDeals: five issues found 2026-08-21
 
 From Elijah Gutman, Umergence / Hartford AI Partners. Enterprise instance,
 account elijah.gutman@umergence.com, Microsoft 365 connector, no Google
@@ -51,9 +51,10 @@ company_overview, products, icp, sales_process, tone_prefs, scheduled_tasks.
 or expose the calendar/email/transcript/document inventory as a directly
 writable section, independent of step order.
 
-## 3. `team_search` returns a raw upstream 401, and echoes key material
+## 3. Vector search is down: the embeddings key is rejected, and the raw error reaches the client
 
-**Severity: high, with a security note.** `team_search` fails with:
+**Severity: high, with a security note.** Every embeddings-backed call is
+failing against OpenAI with an invalid key. `team_search` surfaces it directly:
 
 ```
 OpenAI embeddings request failed: 401 {"error": {"message": "Incorrect API
@@ -61,22 +62,30 @@ key provided: sk-proj-****...der). You can find your API key at
 https://platform.openai.com/account/api-keys.", "code": "invalid_api_key"}}
 ```
 
-Two separate problems.
+The key is CloseDeals-side, not something a tenant supplies, so this is
+very likely affecting every account rather than just ours. Flagging it as the
+most time-sensitive item here for that reason.
 
-**It hard-fails where `search` degrades.** Plain `search` still returns
-results with `embedding: null` and a populated `search_vector`, so it falls
-back to full-text and keeps working with reduced recall. `team_search` has no
-such fallback. Given that scheduled routines rely on search for
-duplicate-deal and duplicate-contact guards, a hard failure there risks
-duplicate records being created; a graceful degrade does not.
+Three separate problems fall out of it.
 
-**The upstream error body is passed through to the client.** It contains the
+**Semantic search is silently degraded product-wide.** Plain `search` still
+returns results, but every row comes back with `embedding: null` alongside a
+populated `search_vector` and an `_rrfScore`, so the full-text half of the
+fusion is carrying the query alone. Callers get results and no signal that
+recall dropped. A `degraded: true` flag or a warning in the response would let
+a consumer decide whether to trust a negative result.
+
+**`team_search` hard-fails where `search` degrades.** Same backend, two
+different behaviours. This matters because scheduled routines lean on search
+for duplicate-deal and duplicate-contact guards before writing records. A
+graceful degrade keeps those guards working with reduced recall; a hard
+failure risks duplicates being created. `team_search` should fall back the way
+`search` already does.
+
+**The upstream error body is passed through to the client.** It carries the
 key prefix and trailing characters. Even mostly masked, provider credentials
-should not reach a tenant's client. Worth catching these and returning a
-generic error.
-
-Also flagging that the embeddings key appears to be invalid in production
-right now, which means vector search is down product-wide, not just for us.
+should not reach a tenant's client. Worth catching provider errors and
+returning a generic message.
 
 ## 4. Two completion meters disagree, and the optimistic one is the visible one
 
@@ -94,30 +103,7 @@ and the half that was missing is the half that matters operationally
 it to something scoped like `profile_completeness_pct` and surface step
 progress alongside it in the same response.
 
-## 5. Stage vocabularies diverge across members, and team roll-ups group on the raw string
-
-**Severity: medium.** `team_pipeline_summary` and `team_report` group by the
-stage string each member's instance stores. Across three members of one team
-we see three different stage sets, and several values exist in no configured
-pipeline in the company hub at all. Examples from two members:
-`Mandate`, `Teaser Sent`, `IM / Data Room`, `PSA`, `Parked`, `Closed Lost`,
-`Introductions`, `Diligence` (where the hub defines `Due Diligence`).
-
-Consequence: a cross-member roll-up fragments into per-member stage
-vocabularies and cannot be totalled or compared. Any admin dashboard built on
-these tools inherits that.
-
-A related question we could not answer from the tools: the hub's
-`sales_process` is returned for the calling user only, so an admin cannot see
-whether a member's instance defines its own pipeline or is running deals
-against stages their own config does not contain.
-
-**Suggested fix:** either a canonical stage model with per-instance mappings,
-or return each member's own `sales_process` alongside their rollup so a
-consumer can normalise. Exposing member pipeline definitions to the team
-admin would also help.
-
-## 6. `items_supplied` must exclude cancelled events, undocumented
+## 5. `items_supplied` must exclude cancelled events, undocumented
 
 **Severity: low.** `generate_morning_brief` drops cancelled events
 server-side, so counting them in `items_supplied` produces
